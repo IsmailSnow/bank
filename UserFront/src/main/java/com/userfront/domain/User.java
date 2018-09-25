@@ -1,6 +1,9 @@
 package com.userfront.domain;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,11 +16,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.userfront.domain.security.Auhtority;
+import com.userfront.domain.security.UserRole;
 import com.userfront.utils.validation.target.Phone;
 
 @Entity
-public class User {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,10 +41,10 @@ public class User {
 	private String lastName;
 
 	@Column(name = "email", nullable = false, unique = true)
-	@Email(message="veuillez vous inserez un email valide !")
+	@Email(message = "veuillez vous inserez un email valide !")
 	private String email;
-	
-	@Phone(message="veuillez vous inserez un numero valide !")
+
+	@Phone(message = "veuillez vous inserez un numero valide !")
 	private String phone;
 
 	private boolean enabled = true;
@@ -54,6 +62,9 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Recipient> recipientList;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonIgnore
+	private Set<UserRole> userRoles = new HashSet<>();
 
 	public Long getUserId() {
 		return userId;
@@ -157,5 +168,40 @@ public class User {
 				+ firstName + ", lastName=" + lastName + ", email=" + email + ", phone=" + phone + ", enabled="
 				+ enabled + "]";
 	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		userRoles.forEach(a -> authorities.add(new Auhtority(a.getRole().getName())));
+		return authorities;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// add some functionalites
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// add some functionalites
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// add some functionalites
+		return enabled;
+	}
+
+	public Set<UserRole> getUserRoles() {
+		return userRoles;
+	}
+
+	public void setUserRoles(Set<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
+	
+	
 
 }
