@@ -1,5 +1,6 @@
 package com.userfront.ressource;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -8,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.userfront.dao.RoleDao;
+import com.userfront.domain.PrimaryAccount;
+import com.userfront.domain.SavingsAccount;
 import com.userfront.domain.User;
 import com.userfront.domain.security.Role;
 import com.userfront.domain.security.UserRole;
@@ -75,6 +79,21 @@ public class HomeController {
 			}
 			userService.create(user, userRoles);
 			return "redirect:/";
+		}
+	}
+
+	@RequestMapping("/userFront")
+	public String userFront(Principal principal, Model model) {
+		Optional<User> user = userService.findByUsername(principal.getName());
+		if (user.isPresent()) {
+			PrimaryAccount primaryAccount = user.get().getPrimaryAccount();
+			SavingsAccount savingsAccount = user.get().getSavingsAcount();
+			model.addAttribute("primaryAccount", primaryAccount);
+			model.addAttribute("savingsAccount", savingsAccount);
+			return "userFront";
+		} else {
+			SecurityContextHolder.clearContext();
+			return "redirect:/index";
 		}
 
 	}
