@@ -86,9 +86,37 @@ public class AccountServiceImpl implements AccountService {
 		});
 
 	}
+	
+	@Override
+	public void withdraw(String accountType, double amount, Principal principal) {
+		userService.findByUsername(principal.getName()).ifPresent(user -> {
+			logger.debug("user {} is found , start operation saving", user.getUsername());
+			if (accountType.equalsIgnoreCase(PRIMARY)) {
+				PrimaryAccount primaryAccount = user.getPrimaryAccount();
+				primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().subtract(new BigDecimal(amount)));
+				primaryAccountDao.save(primaryAccount);
+				Date date = new Date();
+				PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "withdraw to Primary Account",
+						"Account", "Finished", amount, primaryAccount.getAccountBalance(), primaryAccount);
+
+			} else if (accountType.equalsIgnoreCase(SAVINGS)) {
+				SavingsAccount savingsAccount = user.getSavingsAcount();
+				savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().subtract(new BigDecimal(amount)));
+				savingsAccountDao.save(savingsAccount);
+				Date date = new Date();
+				SavingsTransaction savingsTransation = new SavingsTransaction(date, "withdraw to Savings Account",
+						"Account", "Finished", amount, savingsAccount.getAccountBalance(), savingsAccount);
+			}
+
+		});
+		
+		
+	}
 
 	private int accountGen() {
 		return ++nextAccountNumber;
 	}
+
+	
 
 }
