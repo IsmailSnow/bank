@@ -23,7 +23,7 @@ public class SavingsTransaction {
 	private String description;
 	private String type;
 	private String status;
-	private double amout;
+	private double amount;
 	private BigDecimal availableBalance;
 
 	@ManyToOne
@@ -33,14 +33,14 @@ public class SavingsTransaction {
 	public SavingsTransaction() {
 	}
 
-	public SavingsTransaction(Date date, String description, String type, String status, double amout,
+	public SavingsTransaction(Date date, String description, String type, String status, double amount,
 			BigDecimal availableBalance, SavingsAccount savingsAccount) {
 		super();
 		this.date = date;
 		this.description = description;
 		this.type = type;
 		this.status = status;
-		this.amout = amout;
+		this.amount = amount;
 		this.availableBalance = availableBalance;
 		this.savingsAccount = savingsAccount;
 	}
@@ -85,12 +85,12 @@ public class SavingsTransaction {
 		this.status = status;
 	}
 
-	public double getAmout() {
-		return amout;
+	public double getAmount() {
+		return amount;
 	}
 
-	public void setAmout(double amout) {
-		this.amout = amout;
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 	public BigDecimal getAvailableBalance() {

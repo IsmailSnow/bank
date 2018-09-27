@@ -2,6 +2,7 @@ package com.userfront.ressource;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -17,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.userfront.dao.UserDao;
 import com.userfront.domain.PrimaryAccount;
+import com.userfront.domain.PrimaryTransaction;
 import com.userfront.domain.SavingsAccount;
+import com.userfront.domain.SavingsTransaction;
 import com.userfront.domain.User;
 import com.userfront.domain.dto.DepositDto;
 import com.userfront.service.AccountService;
+import com.userfront.service.TransactionService;
 import com.userfront.service.UserService;
 
 @Controller
@@ -42,10 +46,14 @@ public class AccountController {
 
 	@RequestMapping("/primaryAccount")
 	public String primaryAccount(Principal principal, Model model) {
+
 		Optional<User> user = userService.findByUsername(principal.getName());
 		if (user.isPresent()) {
+			List<PrimaryTransaction> primaryTransactionList = user.get().getPrimaryAccount()
+					.getPrimaryTransactionList();
 			PrimaryAccount primaryAccount = user.get().getPrimaryAccount();
 			model.addAttribute("primaryAccount", primaryAccount);
+			model.addAttribute("primaryTransactionList", primaryTransactionList);
 			return "primaryAccount";
 		} else {
 			SecurityContextHolder.clearContext();
@@ -59,7 +67,9 @@ public class AccountController {
 		Optional<User> user = userService.findByUsername(principal.getName());
 		if (user.isPresent()) {
 			SavingsAccount savingsAccount = user.get().getSavingsAcount();
+			List<SavingsTransaction> savingsTransactionList = user.get().getSavingsAcount().getSavingsTransactionList();
 			model.addAttribute("savingsAccount", savingsAccount);
+			model.addAttribute("savingsTransactionList", savingsTransactionList);
 			return "savingsAccount";
 		} else {
 			SecurityContextHolder.clearContext();
@@ -102,13 +112,13 @@ public class AccountController {
 		if (result.hasErrors()) {
 			return "withdraw";
 		}
-		
+
 		BigDecimal primaryAccountBalance = BigDecimal.ZERO;
 		BigDecimal savingsAccountBalance = BigDecimal.ZERO;
-		Optional<User> user = userDao.findByUsername(principal.getName()); 
-		if(user.isPresent()) {
-			primaryAccountBalance=primaryAccountBalance.add(user.get().getPrimaryAccount().getAccountBalance());
-			savingsAccountBalance=savingsAccountBalance.add(user.get().getSavingsAcount().getAccountBalance());
+		Optional<User> user = userDao.findByUsername(principal.getName());
+		if (user.isPresent()) {
+			primaryAccountBalance = primaryAccountBalance.add(user.get().getPrimaryAccount().getAccountBalance());
+			savingsAccountBalance = savingsAccountBalance.add(user.get().getSavingsAcount().getAccountBalance());
 		}
 		if (dto.getAccountType().equals(SAVINGS)
 				&& (BigDecimal.valueOf(Double.parseDouble(dto.getAmount())).compareTo(savingsAccountBalance) > 0)) {
@@ -117,11 +127,9 @@ public class AccountController {
 		}
 		if (dto.getAccountType().equals(PRIMARY)
 				&& (BigDecimal.valueOf(Double.parseDouble(dto.getAmount())).compareTo(primaryAccountBalance) > 0)) {
-			model.addAttribute("amountError",true);
+			model.addAttribute("amountError", true);
 			return "withdraw";
 		}
-
-		
 
 		accountService.withdraw(dto.getAccountType(), Double.parseDouble(dto.getAmount()), principal);
 		return "redirect:/userFront";

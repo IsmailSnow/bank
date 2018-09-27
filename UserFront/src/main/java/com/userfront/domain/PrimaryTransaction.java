@@ -10,35 +10,34 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-
 @Entity
 public class PrimaryTransaction {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Date date;
 	private String description;
 	private String type;
 	private String status;
-	private double amout;
+	private double amount;
 	private BigDecimal availableBalance;
-    @ManyToOne
-    @JoinColumn(name="primary_account_id")
+	@ManyToOne
+	@JoinColumn(name = "primary_account_id")
 	private PrimaryAccount primaryAccount;
 
 	public PrimaryTransaction() {
 		super();
 	}
 
-	public PrimaryTransaction(Date date, String description, String type, String status, double amout,
+	public PrimaryTransaction(Date date, String description, String type, String status, double amount,
 			BigDecimal availableBalance, PrimaryAccount primaryAccount) {
 		super();
 		this.date = date;
 		this.description = description;
 		this.type = type;
 		this.status = status;
-		this.amout = amout;
+		this.amount = amount;
 		this.availableBalance = availableBalance;
 		this.primaryAccount = primaryAccount;
 	}
@@ -83,12 +82,12 @@ public class PrimaryTransaction {
 		this.status = status;
 	}
 
-	public double getAmout() {
-		return amout;
+	public double getAmount() {
+		return amount;
 	}
 
-	public void setAmout(double amout) {
-		this.amout = amout;
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 	public BigDecimal getAvailableBalance() {
