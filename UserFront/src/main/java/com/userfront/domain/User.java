@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.userfront.domain.security.Auhtority;
 import com.userfront.domain.security.UserRole;
+import com.userfront.utils.validation.target.EmailValidation;
 import com.userfront.utils.validation.target.Phone;
 
 @Entity
@@ -41,7 +42,7 @@ public class User implements UserDetails {
 	private String lastName;
 
 	@Column(name = "email", nullable = false, unique = true)
-	@Email(message = "veuillez vous inserez un email valide !")
+	@EmailValidation(message = "veuillez vous inserez un email valide !")
 	private String email;
 
 	@Phone(message = "veuillez vous inserez un numero valide !")

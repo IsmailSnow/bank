@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 public class Appointment {
@@ -16,7 +17,9 @@ public class Appointment {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	private Date date;
+	@NotEmpty(message="Please pick a location")
 	private String location;
+	@NotEmpty(message="Please set a description")
 	private String description;
 	private boolean confirmed;
 

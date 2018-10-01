@@ -6,21 +6,30 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.userfront.utils.validation.target.EmailValidation;
+import com.userfront.utils.validation.target.Phone;
 
 @Entity
 public class Recipient {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@NotEmpty(message = "you must enter a name !")
 	private String name;
-	private String email;
-	private String phone;
-	private String accountNumber;
-	private String description; 
 	
+	@EmailValidation(message = "you must enter a valid email !")
+	private String email;
+	@Phone(message = "you must enter a valid number phone!")
+	private String phone;
+	@NotEmpty(message = "you must enter an account !")
+	private String accountNumber;
+	@NotEmpty(message = "you must enter a discription !")
+	private String description;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@JsonIgnore
@@ -81,5 +90,7 @@ public class Recipient {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	
 
 }
