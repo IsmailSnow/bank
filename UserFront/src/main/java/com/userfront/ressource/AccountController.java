@@ -94,7 +94,7 @@ public class AccountController {
 			return "deposit";
 		}
 		accountService.deposit(dto.getAccountType(), Double.parseDouble(dto.getAmount()), principal);
-		return "redirect:/userFront";
+		return "redirect:/home";
 	}
 
 	@RequestMapping(value = "/withdraw", method = RequestMethod.GET)
@@ -132,7 +132,7 @@ public class AccountController {
 		}
 
 		accountService.withdraw(dto.getAccountType(), Double.parseDouble(dto.getAmount()), principal);
-		return "redirect:/userFront";
+		return "redirect:/home";
 
 	}
 

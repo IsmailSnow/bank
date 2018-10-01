@@ -82,7 +82,7 @@ public class HomeController {
 		}
 	}
 
-	@RequestMapping("/userFront")
+	@RequestMapping("/home")
 	public String userFront(Principal principal, Model model) {
 		Optional<User> user = userService.findByUsername(principal.getName());
 		if (user.isPresent()) {
@@ -90,7 +90,7 @@ public class HomeController {
 			SavingsAccount savingsAccount = user.get().getSavingsAcount();
 			model.addAttribute("primaryAccount", primaryAccount);
 			model.addAttribute("savingsAccount", savingsAccount);
-			return "userFront";
+			return "home";
 		} else {
 			SecurityContextHolder.clearContext();
 			return "redirect:/index";

@@ -58,7 +58,7 @@ public class AppointmentController {
 		if (user.isPresent()) {
 			appointment.setUser(user.get());
 			appointmentService.createAppointment(appointment);
-			return "redirect:/userFront";
+			return "redirect:/home";
 		} else {
 			return "appointment";
 		}

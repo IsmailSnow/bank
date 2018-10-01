@@ -63,7 +63,7 @@ public class TransferController {
 			User user = retrievedUser.get();
 			transactionService.betweenAccountsTransfer(dto.getTransferFrom(), dto.getTransferTo(), dto.getAmount(),
 					user.getPrimaryAccount(), user.getSavingsAcount());
-			return "redirect:/userFront";
+			return "redirect:/home";
 		} else {
 			return "redirect:/index";
 		}
@@ -147,7 +147,7 @@ public class TransferController {
 			Recipient recipient = transactionService.findRecipientByName(dto.getRecipientName());
 			transactionService.toSomeoneElseTransfer(recipient, dto.getAccountType(), dto.getAmount(), user.get().getPrimaryAccount(),
 					user.get().getSavingsAcount());
-			return "redirect:/userFront";
+			return "redirect:/home";
 		} else {
 			return "toSomeoneElse";
 		}
