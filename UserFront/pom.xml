@@ -9,8 +9,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>UserFront</name>
-	<description>User Online Bank</description>
+	<name>Bank</name>
+	<description>Online Bank</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
